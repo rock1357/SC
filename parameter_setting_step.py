@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def scanning(t,V,tn,Vn,n1,n2,std):
+def parameter_setter(t,V,tn,Vn,n1,n2,std):
 
 #gain=input('did you use an amplification? Set the gain used in the experiment, although write 1:')
 #gain2=input('Write the gain used for the noise acquisition:')  
@@ -28,9 +28,9 @@ def scanning(t,V,tn,Vn,n1,n2,std):
     V=V[n1:n2];
     t=t[n1:n2];
     Vn=Vn/gain2;
-    k_factor=max(Vn)/std;
+    k_factor=min(Vn)/(std/gain2);
     noise=k_factor*std 
-    print('the max/min value of the noise is bigger than the standard deviation value of about:',k_factor)
+    print('the min value of the noise is negativly bigger than the standard deviation value of about:',k_factor)
 #k_factor=input('choose the multiplication factor for the peak extraction above the std value',k_factor)
 
 
