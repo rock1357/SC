@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 
-def scanning(t,tn,V,Vn,n1,n2,std):
+def scanning(t,V,tn,Vn,n1,n2,std):
 
 #gain=input('did you use an amplification? Set the gain used in the experiment, although write 1:')
 #gain2=input('Write the gain used for the noise acquisition:')  
-    gain=10**9;
+    gain=10**10;
     gain2=10**10;
   
     'plot of the total time trace-figure divided by the gain'
@@ -25,8 +25,9 @@ def scanning(t,tn,V,Vn,n1,n2,std):
     plt.show()
 
     V=V/gain2;
-    V=V[n1:n2]/gain;
+    V=V[n1:n2];
     t=t[n1:n2];
+    Vn=Vn/gain2;
     k_factor=max(Vn)/std;
     noise=k_factor*std 
     print('the max/min value of the noise is bigger than the standard deviation value of about:',k_factor)
@@ -35,7 +36,7 @@ def scanning(t,tn,V,Vn,n1,n2,std):
 
     'plot of the choosen partial time trace-figure divided by the gain'
     # plotting the points 
-    plt.plot(t,V/gain)
+    plt.plot(t,V)
   
     # naming the x axis
     plt.xlabel('time[s]')
