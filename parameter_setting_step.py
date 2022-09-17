@@ -1,12 +1,8 @@
 import matplotlib.pyplot as plt
 
-def parameter_setter(t,V,tn,Vn,n1,n2,std):
+def parameter_setter(t,V,tn,Vn,n1,n2,std,gain,gain2):
 
-#gain=input('did you use an amplification? Set the gain used in the experiment, although write 1:')
-#gain2=input('Write the gain used for the noise acquisition:')  
-    gain=10**10;
-    gain2=10**10;
-  
+
     'plot of the total time trace-figure divided by the gain'
     # plotting the points 
     plt.plot(t,V/gain)
@@ -23,15 +19,14 @@ def parameter_setter(t,V,tn,Vn,n1,n2,std):
   
 # function to show the plot
     plt.show()
+    
+    'now we reinitialize the V and t variables with the choosen time range'
 
     V=V/gain2;
     V=V[n1:n2];
     t=t[n1:n2];
     Vn=Vn/gain2;
-    k_factor=min(Vn)/(std/gain2);
-    noise=k_factor*std 
-    print('the min value of the noise is negativly bigger than the standard deviation value of about:',k_factor)
-#k_factor=input('choose the multiplication factor for the peak extraction above the std value',k_factor)
+
 
 
     'plot of the choosen partial time trace-figure divided by the gain'
@@ -61,7 +56,7 @@ def parameter_setter(t,V,tn,Vn,n1,n2,std):
 #       positive_scanning(choice)
        
    
-    return 0
+    return [t,V,choice]
 
 
 
