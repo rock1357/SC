@@ -1,6 +1,9 @@
 #importing data from a csv file 
 import numpy as np
-import parameter_setting_step as pss
+import plot_shower as ps
+import negative_scanner as ns
+
+test=0
 
 c=10
 print('import the data of your recorded chronoamperometric experiment')
@@ -16,13 +19,23 @@ V= data[:,1]
 tn= data2[:,0]
 Vn= data2[:,1]
 
-#gain=input('did you use an amplification? Set the gain used in the experiment, although write 1:')
-#gain2=input('Write the gain used for the noise acquisition:')  
+def test_data():
+    for i in range(1,len(t)):
+        assert type(t[i])==np.float64
+        assert type(V[i])==np.float64
+        
+        
+    
 gain=10**10;
     
 gain2=10**10;
 
-std=np.std(Vn/gain2)
+if test==0:
+    gain=int(input('did you use an amplification? Set the gain used in the experiment, although write 1:'))
+    gain2=int(input('Write the gain used for the noise acquisition:')  )
+
+
+std=np.std(Vn/float(gain2))
 
 
 '''Once introduced the chronoamperometric recording with name t and V here we can make the user to 
@@ -44,32 +57,83 @@ print('the total duration of the trace is',duration)
 
 
 
-
-#[time_interval1,time_interval2]=[input('enter the initial time you want the scanner to start:t_i='),input('enter the final time you want the scanner to finish:t_i=')]
+if test==0:
+    [time_interval1,time_interval2]=[input('enter the initial time you want the scanner to start:t_i='),input('enter the final time you want the scanner to finish:t_i=')]
 time_interval1= 1;
-time_interval2= 50;
+time_interval2= 1.1;
 
-n1=time_interval1/T
-n2=time_interval2/T
+n1=round(time_interval1/T)
+n2=round(time_interval2/T)
 
 
 """the last point of the voltage must be positive to avoid an incomplete extraction of the 
 negative peak"""
 
-for s in range(round(n1),round(n2)):
-    if s>n2-100:
-        if V[s]>0:
-            print(s)
-            break 
-    break 
-    break
+
 
 V=V/gain2;
-Vr=V[round(n1):round(n2)];
-tr=t[round(n1):round(n2)];
+Vr=V[n1:n2];
+tr=t[n1:n2];
 Vn=Vn/gain2;
 
 
-a=pss.parameter_setter(tr,Vr,t,V)
+a=ps.plot_shower(tr,Vr,t,V)
 
+       
+
+def test_ps():
+    a=ps.plot_shower(0,0,0,0)
+    assert a==0
+
+
+
+if test==0:
+    choice=input('do you have peaks on negative or positive side of the trace?Select negative [n] or positive [p]')
+
+choice='n'
+    
+if choice=='n':
+    'call negative scanning function'
+    b=ns.negative_scanner(tr,Vr,tn,Vn,std,test)
+else:
+    'call positive scanning function'
+    #positive_scanning(choice)
+
+
+
+
+'''reinitialize the tr=trestricted and Vr=Vrestricted with the precessed variable by the ns method'''
+
+for i in range(1,b[2]):
+    tr[i]=float(b[0][i])
+   
+    Vr[i]=float(b[1][i]) 
+    if Vr[i]==0:
+        tr[i]=np.nan
+        Vr[i]=np.nan
+for i in range(b[2],len(tr)):
+    tr[i]=np.nan
+    Vr[i]=np.nan
+    
+    if Vr[i]==0:
+        tr[i]=np.nan
+        Vr[i]=np.nan
+        
+    
+
+    
+      
+
+def test_outp_ns():
+    for i in range(1,len(tr)):
+        assert type(tr[i])==np.float64
+        assert type(Vr[i])==np.float64
+        
+
+
+ps.plot_shower(tr,Vr)
+
+    
+    
+    
 

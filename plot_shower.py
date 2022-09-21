@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def parameter_setter(tr,Vr,t,V):
+def plot_shower(tr,Vr,t=0,V=0):
 
 
     'plot of the total time trace-figure divided by the gain'
@@ -42,16 +42,7 @@ def parameter_setter(tr,Vr,t,V):
     plt.show()
 
 
-#choice=input('do you have peaks on negative or positive side of the trace?Select negative [n] or positive [p]')
-    choice='n';
-    
-#    if choice=='n':
-#       'call negative scanning function'
-#       negative_scanning(choice)
-#    else:
-#       'call positive scanning function'
-#       positive_scanning(choice)
-       
+
    
     return 0
 
