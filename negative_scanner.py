@@ -1,3 +1,6 @@
+import plot_shower as ps
+import numpy as np
+import negative_peak_levelling as npl
 
 def negative_scanner(t,V,tn,Vn,std,test):
     
@@ -8,32 +11,33 @@ def negative_scanner(t,V,tn,Vn,std,test):
     negative peak"""
     l=len(t)
     
+    
     if l<500 :
         print("too few points")
         return 
     
-    for s in range(1,l):
+    for s in range(0,l):
        
-        if s>len(t)-100: 
+        if s>l-1-100: 
             
             
             if V[s]>0:
                 
                 l=round(s)
-                print('length',l)
+                print('length=l:',l)
                 
                 break
-    print(l)
-            
+    
+    
              
         
     
     peak_n=0
     points_nth_peak=[0]*l
-    for_parameter=0
-    first_while_param=0
-    second_while_param=0
-    save_starting_param_for_int=[0]*l
+    w_parameter=0
+    first_while_parameter=0
+    second_while_parameter=0
+    save_starting_parameter=[0]*l
     save_ending_parameter=[0]*l
     t_peak=[0]*l
     V_peak=[0]*l
@@ -43,15 +47,18 @@ def negative_scanner(t,V,tn,Vn,std,test):
     print('the min value of the noise is negativly bigger than the standard deviation value of about:',abs(k_factor))
     
     if test==0: 
-        k_factor=float(input('choose the multiplication factor for the peak extraction above the std value'))
+        k_factor=float(input('choose the multiplication factor for the peak extraction above the std value:'))
    
     
-    while for_parameter<=l-2:
+    while w_parameter<=l-2:
+        
         
         '''if a negative peak is found to be lower than -k*std(data) start the
         peak recording '''
         
-        if for_parameter==l-2:
+        
+        if w_parameter==l-2:
+            
             
             print('number of extracted peaks:',peak_n)
             
@@ -60,23 +67,23 @@ def negative_scanner(t,V,tn,Vn,std,test):
         
         
     
-        for_parameter=for_parameter+1;
-
-        if V[for_parameter] < -noise:
+        w_parameter=w_parameter+1;
+        
+        if V[w_parameter-1] < -noise:
            
-            
+           
             peak_n=peak_n+1;'%enhance the counting of the peaks when if cond.% is true'
 
-            first_while_param=for_parameter; ''' the first while parameter serves for the
+            first_while_parameter=w_parameter; ''' the first while parameter serves for the
                              % second while parameter-(w.p) (see below)'''
+            
                              
-            save_starting_param_for_int[peak_n]=first_while_param;'save the number of the starting t value of the peak for next integration function'
+            save_starting_parameter[peak_n-1]=first_while_parameter-1;'save the number of the starting t value of the peak for next integration function'
             
             
             
-        
+            
             while 1:
-                
                 
                 
                 
@@ -85,21 +92,21 @@ def negative_scanner(t,V,tn,Vn,std,test):
                 
                 'i want the while to see the condition not at the starting' 
         
-                first_while_param=first_while_param-1; 'decrease the first w.p.'
+                first_while_parameter=first_while_parameter-1; 'decrease the first w.p.'
         
         
-                if first_while_param<1:
+                if first_while_parameter<1:
                     
                     ' if the condition is already true break the while loop'
-                    V_peak[first_while_param+1]=V[first_while_param+1];
-                    first_while_param=first_while_param+2;
+                    V_peak[first_while_parameter]=V[first_while_parameter];
+                    first_while_parameter=first_while_parameter+2;
                     break 
     
-                elif V[first_while_param]>0 :
+                elif V[first_while_parameter]>0 :
                     
                     'else continue untill V>=0'
         
-                    save_starting_param_for_int[peak_n]=first_while_param;
+                    save_starting_parameter[peak_n-1]=first_while_parameter;
                
         
                     break
@@ -108,37 +115,37 @@ def negative_scanner(t,V,tn,Vn,std,test):
              
         
 
-            second_while_param=first_while_param;'% the second w.p should start from the last value of the first w.p.'
+            second_while_parameter=first_while_parameter;'% the second w.p should start from the last value of the first w.p.'
         
            
             while 2:
                 
                 
-                if second_while_param==l-2 :
+                if second_while_parameter==l-2 :
                     print('while 2-1')
                    
                     break 
-                t_peak[second_while_param]=float(t[second_while_param]);'record t_points of the peak'
-                V_peak[second_while_param]=float(V[second_while_param]);'record the V point of the peak'
+                t_peak[second_while_parameter]=float(t[second_while_parameter]);'record t_points of the peak'
+                V_peak[second_while_parameter]=float(V[second_while_parameter]);'record the V point of the peak'
             
             
-                second_while_param=second_while_param+1;'encrease the second wp'
-                if second_while_param>l-2 :
+                second_while_parameter=second_while_parameter+1;'encrease the second wp'
+                if second_while_parameter>l-2 :
                     print('while 2-2')
                    
                     break
                
                 
             
-                if V[second_while_param]>=0:
+                if V[second_while_parameter]>=0:
                    
                     ' make a condition for the last peak point'
                
-                    t_peak[second_while_param]=float(t[second_while_param]); 'save the last peak point before exit from the while loop'
-                    V_peak[second_while_param]=float(V[second_while_param]); '//////////same/////'
+                    t_peak[second_while_parameter]=float(t[second_while_parameter]); 'save the last peak point before exit from the while loop'
+                    V_peak[second_while_parameter]=float(V[second_while_parameter]); '//////////same/////'
                 
-                    save_ending_parameter[peak_n]=second_while_param;
-                    points_nth_peak[peak_n]=save_ending_parameter[peak_n]-save_starting_param_for_int[peak_n]+1;'% counts the n.of point constituting the peak'
+                    save_ending_parameter[peak_n-1]=second_while_parameter;
+                    points_nth_peak[peak_n-1]=save_ending_parameter[peak_n-1]-save_starting_parameter[peak_n-1]+1;'% counts the n.of point constituting the peak'
                
                     break
                   
@@ -148,10 +155,11 @@ def negative_scanner(t,V,tn,Vn,std,test):
             
             
         
-            for_parameter=second_while_param;
+            w_parameter=second_while_parameter;
             
             
-    if for_parameter==l-1 :
+            
+    if w_parameter==l-1 :
         
         
         
@@ -160,12 +168,41 @@ def negative_scanner(t,V,tn,Vn,std,test):
 
         print('-----------------end negative_scanner method-----------------')
         
+    '''reinitialize the tr=trestricted and Vr=Vrestricted with the precessed variable by the ns method'''
+   
+    for i in range(0,l):
+        
+        if V_peak[i]==0:
+            t_peak[i]=np.nan
+            V_peak[i]=np.nan
+    
+        
+        
+            
+        
+
+        
+          
+
+    def test_outp_ns():
+        for i in range(0,len(t)):
+            assert type(t_peak[i])==np.float64
+            assert type(V_peak[i])==np.float64
+            
+        
    
     def test_t_V():
          assert len(t_peak)==l
          assert len(V_peak)==l
         
+    
+ 
+    ps.plot_shower(t_peak,V_peak,1)
+    
+    
+    npl.negative_peak_levelling(save_starting_parameter,save_ending_parameter,peak_n,l,t_peak,V_peak)
+    
+  
         
-        
-    return [t_peak,V_peak,l]
+    return 0
     

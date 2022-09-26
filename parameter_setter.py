@@ -20,7 +20,7 @@ tn= data2[:,0]
 Vn= data2[:,1]
 
 def test_data():
-    for i in range(1,len(t)):
+    for i in range(0,len(t)-1):
         assert type(t[i])==np.float64
         assert type(V[i])==np.float64
         
@@ -59,8 +59,8 @@ print('the total duration of the trace is',duration)
 
 if test==0:
     [time_interval1,time_interval2]=[input('enter the initial time you want the scanner to start:t_i='),input('enter the final time you want the scanner to finish:t_i=')]
-time_interval1= 1;
-time_interval2= 1.1;
+time_interval1= 0;
+time_interval2= 0.1;
 
 n1=round(time_interval1/T)
 n2=round(time_interval2/T)
@@ -77,12 +77,12 @@ tr=t[n1:n2];
 Vn=Vn/gain2;
 
 
-a=ps.plot_shower(tr,Vr,t,V)
+a=ps.plot_shower(tr,Vr,0,t,V)
 
        
 
 def test_ps():
-    a=ps.plot_shower(0,0,0,0)
+    a=ps.plot_shower(0,0,0,0,0)
     assert a==0
 
 
@@ -102,36 +102,10 @@ else:
 
 
 
-'''reinitialize the tr=trestricted and Vr=Vrestricted with the precessed variable by the ns method'''
-
-for i in range(1,b[2]):
-    tr[i]=float(b[0][i])
-   
-    Vr[i]=float(b[1][i]) 
-    if Vr[i]==0:
-        tr[i]=np.nan
-        Vr[i]=np.nan
-for i in range(b[2],len(tr)):
-    tr[i]=np.nan
-    Vr[i]=np.nan
-    
-    if Vr[i]==0:
-        tr[i]=np.nan
-        Vr[i]=np.nan
-        
-    
-
-    
-      
-
-def test_outp_ns():
-    for i in range(1,len(tr)):
-        assert type(tr[i])==np.float64
-        assert type(Vr[i])==np.float64
-        
 
 
-ps.plot_shower(tr,Vr)
+
+
 
     
     
